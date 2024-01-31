@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Chess": {
+      "commandName": "Project",
+      "workingDirectory": "D:\\UFAR\\C#\\Chess\\Saddle point"
+    }
+  }
+}

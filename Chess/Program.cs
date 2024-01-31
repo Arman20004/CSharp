@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO.Pipes;
 using System.Linq.Expressions;
@@ -43,7 +42,7 @@ class main
                     Console.ForegroundColor = ConsoleColor.Green;
 
 
-                Console.Write(" " + board[i, j]);
+                Console.Write("{0,2} ", board[i, j]);
 
                 Console.ResetColor();
             }
