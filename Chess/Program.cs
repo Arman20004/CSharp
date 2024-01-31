@@ -1,6 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.IO.Pipes;
 using System.Linq.Expressions;
 using System.Net.Sockets;
 using System.Reflection.Metadata.Ecma335;
@@ -17,6 +18,17 @@ class main
         }
 
     }
+
+    static bool canJumpHere(int[,] board, int pos1, int pos2)
+    {
+        if (((pos1 > 0 && pos1 < 9) && (pos2 > 0 && pos2 < 9)) && board[8 - pos1, pos2 - 1] == 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     static void printMatrix(int [,] board) {
         for (int i = 0; i < 8; i++)
         {
@@ -39,6 +51,139 @@ class main
         }
     }
 
+    static void boardRun(int[,] board ,int posx, int posy, int move)
+
+    {
+        printMatrix(board);
+
+        Random rand = new Random();
+        bool check = true;
+        bool validplace = true;
+        while (check)
+        {
+            Console.WriteLine("Press any key to continue");
+            int[] possibleplaces = new int[8];
+
+            if (canJumpHere(board, posx - 1, posy - 2))
+            {
+                possibleplaces[0] = 1;
+            }
+            if (canJumpHere(board, posx - 2, posy - 1))
+            {
+                possibleplaces[1] = 1;
+            }
+            if (canJumpHere(board, posx - 2, posy + 1))
+            {
+                possibleplaces[2] = 1;
+            }
+            if (canJumpHere(board, posx - 1, posy + 2))
+            {
+                possibleplaces[3] = 1;
+            }
+            if (canJumpHere(board, posx + 1, posy + 2))
+            {
+                possibleplaces[4] = 1;
+            }
+            if (canJumpHere(board, posx + 2, posy + 1))
+            {
+                possibleplaces[5] = 1;
+            }
+            if (canJumpHere(board, posx + 2, posy - 1))
+            {
+                possibleplaces[6] = 1;
+            }
+            if (canJumpHere(board, posx + 1, posy - 2))
+            {
+                possibleplaces[7] = 1;
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (possibleplaces[i] == 1)
+                {
+                    validplace = true;
+                    break;
+                }
+            }
+
+            //////////////////////////////////////////////////////// exit point
+            if (!validplace)
+            {
+                check = false;
+            }
+            else
+            {
+                int x = rand.Next(0, 8);
+
+                while (possibleplaces[x] != 1)
+                {
+                    x = rand.Next(0, 8);
+                }
+
+                switch (x)
+                {
+                    case 0:
+                        posx -= 1;
+                        posy -= 2;
+                        move++;
+                        board[8 - posx, posy - 1] = move;
+                        break;
+                    case 1:
+                        posx -= 2;
+                        posy -= 1;
+                        move++;
+                        board[8 - posx, posy - 1] = move;
+                        break;
+                    case 2:
+                        posx -= 2;
+                        posy += 1;
+                        move++;
+                        board[8 - posx, posy - 1] = move;
+                        break;
+                    case 3:
+                        posx -= 1;
+                        posy += 2;
+                        move++;
+                        board[8 - posx, posy - 1] = move;
+                        break;
+                    case 4:
+                        posx += 1;
+                        posy += 2;
+                        move++;
+                        board[8 - posx, posy - 1] = move;
+                        break;
+                    case 5:
+                        posx += 2;
+                        posy += 1;
+                        move++;
+                        board[8 - posx, posy - 1] = move;
+                        break;
+                    case 6:
+                        posx += 2;
+                        posy -= 1;
+                        move++;
+                        board[8 - posx, posy - 1] = move;
+                        break;
+                    case 7:
+                        posx += 1;
+                        posy -= 2;
+                        move++;
+                        board[8 - posx, posy - 1] = move;
+                        break;
+                }
+
+                validplace= false;
+
+                Console.ReadKey();
+                Console.WriteLine();
+
+                printMatrix(board);
+            }
+            
+        }
+        Console.WriteLine("No valid places left");
+    }
+
     static void horse(int posx, int posy)
     {
 
@@ -59,24 +204,26 @@ class main
 
         printMatrix(board);
 
-        Console.WriteLine("Enter y if you want to move your horse to a random valid square");
-        string answ;
+        string answ = "";
+        Console.Write("Enter y to start playing random horse moves: ");
         answ = Console.ReadLine();
 
         if (answ.ToLower() == "y")
-            nextHorseMove(posx, posy);
+        {
+            board = new int[8, 8];
+            board[8 - posx, posy - 1] = 1;
+            int moveno = 1;
+            boardRun(board, posx, posy, moveno);
+            
+        }
         else
+        {
+            Console.WriteLine("Exiting program");
             return;
-    }
-
-    static void nextHorseMove(int posx, int posy)
-
-    {
-        Console.WriteLine("After horse move");
-        horse(posx, posy);
-        
+        }
 
     }
+
 
     static void queenMoves(int[,] board, int posx, int posy)
     {
@@ -173,9 +320,9 @@ class main
 
         while (check)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 8; i++)
             {
-                for (int j = 0; j < 7; j++)
+                for (int j = 0; j < 8; j++)
                 {
                     if (board[i, j] == 0)
                     {
@@ -187,7 +334,7 @@ class main
 
             if (validplace)
             {
-                Console.WriteLine("Enter y to place a new queen");
+                Console.Write("Enter y to place a new queen: ");
                 answ = Console.ReadLine();
 
                 if (answ.ToLower() == "y")
@@ -234,37 +381,49 @@ class main
         Console.WriteLine("Board with changes ");
         printMatrix(board);
 
- 
-
     }
-    static void logic(string inp)
+ 
+    static int getX(string inp)
     {
-        int posx;
+        int posx = 0;
         do
         {
             Console.Write("Enter X in range from 1 to 8: ");
-            posx = Convert.ToInt32(Console.ReadLine());
 
-        }while(!(posx > 0 && posx < 9));
+            try
+            {
+                posx = Convert.ToInt32(Console.ReadLine());
 
-        int posy;
+            }catch (Exception)
+            {
+                //Intentionally left blank   
+            }
+
+
+        } while (!(posx > 0 && posx < 9));
+
+        return posx;
+    }
+
+    static int getY(string inp)
+    {
+        int posy = 0;
         do
         {
             Console.Write("Enter Y in range from 1 to 8: ");
-            posy = Convert.ToInt32(Console.ReadLine());
+            try
+            {
+                posy = Convert.ToInt32(Console.ReadLine());
+
+            }
+            catch (Exception)
+            {
+             //Intentionally left blank   
+            }
 
         } while (!(posy > 0 && posy < 9));
 
-
-
-        if (inp == "h")
-        {
-            horse(posx, posy);
-            return;
-        }
-
-        queen(posx, posy);
-        return;
+        return posy;
     }
 
     static void Main()
@@ -279,11 +438,11 @@ class main
             {
                 case "q":
                     Console.WriteLine("Enter position of queen");
-                    logic(inp);
+                    queen(getX(inp), getY(inp));
                     break;
                 case "h":
                     Console.WriteLine("Enter position of horse");
-                    logic(inp);
+                    horse(getX(inp), getY(inp));
                     break;
                 default:
                     Console.WriteLine("Try again\n");
