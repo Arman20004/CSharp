@@ -18,7 +18,7 @@ class main
 
     }
 
-    static bool canJumpHere(int[,] board, int pos1, int pos2)
+    static bool validPlaceToMove(int[,] board, int pos1, int pos2)
     {
         if (((pos1 > 0 && pos1 < 9) && (pos2 > 0 && pos2 < 9)) && board[8 - pos1, pos2 - 1] == 0)
         {
@@ -34,13 +34,13 @@ class main
             for (int j = 0; j < 8; j++)
             {
 
-                if (board[i, j] == 3 || board[i,j] == 9)
+                if (board[i, j] == 0)
+                    Console.ForegroundColor = ConsoleColor.Green;
+                else if (board[i, j] % 3 == 0)
                     Console.ForegroundColor = ConsoleColor.Red;
                 else if (board[i,j] == 1)
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                else if (board[i,j] == 0)
-                    Console.ForegroundColor = ConsoleColor.Green;
-
+                
 
                 Console.Write("{0,2} ", board[i, j]);
 
@@ -50,50 +50,133 @@ class main
         }
     }
 
-    static void boardRun(int[,] board ,int posx, int posy, int move)
-
+    static void boardRun(int[,] board ,int posx, int posy, int move = 1)
     {
         printMatrix(board);
+        int[,] refboard = { { 2, 3, 4, 4, 4, 4, 3, 2 },
+                            { 3, 4, 6, 6, 6, 6, 4, 3 },
+                            { 4, 6, 8, 8, 8, 8, 6, 4 },
+                            { 4, 6, 8, 8, 8, 8, 6, 4 },
+                            { 4, 6, 8, 8, 8, 8, 6, 4 },
+                            { 4, 6, 8, 8, 8, 8, 6, 4 },
+                            { 3, 4, 6, 6, 6, 6, 4, 3 },
+                            { 2, 3, 4, 4, 4, 4, 3, 2 }  };
 
         Random rand = new Random();
-        bool check = true;
-        bool validplace = true;
+        bool check = true, validplace = true;
+        int leastnumber;
+        int[] possibleplaces = new int[8];
         while (check)
         {
             Console.WriteLine("Press any key to continue");
-            int[] possibleplaces = new int[8];
 
-            if (canJumpHere(board, posx - 1, posy - 2))
+            possibleplaces = new int[8];
+            leastnumber = 9;
+            if (validPlaceToMove(board, posx - 1, posy - 2))
             {
-                possibleplaces[0] = 1;
+                if(refboard[8 - (posx - 1), (posy - 2) - 1] != 0)
+                {
+                    leastnumber = refboard[8 - (posx - 1), (posy - 2) - 1];
+                    possibleplaces[0] = 1;
+                }
             }
-            if (canJumpHere(board, posx - 2, posy - 1))
+            if (validPlaceToMove(board, posx - 2, posy - 1))
             {
-                possibleplaces[1] = 1;
+                if (leastnumber > refboard[8 - (posx - 2), (posy - 1) - 1]
+                               && refboard[8 - (posx - 2), (posy - 1) - 1] != 0)
+                {
+                    leastnumber = refboard[8 - (posx - 2), (posy - 1) - 1];
+                    possibleplaces = new int[8];
+                    possibleplaces[1] = 1;
+                }
+                else if(leastnumber == refboard[8 - (posx - 2), (posy - 1) - 1])
+                {
+                    possibleplaces[1] = 1;
+                }
             }
-            if (canJumpHere(board, posx - 2, posy + 1))
+            if (validPlaceToMove(board, posx - 2, posy + 1))
             {
-                possibleplaces[2] = 1;
+                if (leastnumber > refboard[8 - (posx - 2), (posy + 1) - 1]
+                               && refboard[8 - (posx - 2), (posy + 1) - 1] != 0)
+                {
+                    leastnumber = refboard[8 - (posx - 2), (posy + 1) - 1];
+                    possibleplaces = new int[8];
+                    possibleplaces[2] = 1;
+                }
+                else if (leastnumber == refboard[8 - (posx - 2), (posy + 1) - 1])
+                {
+                    possibleplaces[2] = 1;
+                }
             }
-            if (canJumpHere(board, posx - 1, posy + 2))
+            if (validPlaceToMove(board, posx - 1, posy + 2))
             {
-                possibleplaces[3] = 1;
+                if (leastnumber > refboard[8 - (posx - 1), (posy + 2) - 1]
+                               && refboard[8 - (posx - 1), (posy + 2) - 1] != 0)
+                {
+                    leastnumber = refboard[8 - (posx - 1), (posy + 2) - 1];
+                    possibleplaces = new int[8];
+                    possibleplaces[3] = 1;
+                }
+                else if (leastnumber == refboard[8 - (posx - 1), (posy + 2) - 1])
+                {
+                    possibleplaces[3] = 1;
+                }
             }
-            if (canJumpHere(board, posx + 1, posy + 2))
+            if (validPlaceToMove(board, posx + 1, posy + 2))
             {
-                possibleplaces[4] = 1;
+                if (leastnumber > refboard[8 - (posx + 1), (posy + 2) - 1]
+                               && refboard[8 - (posx + 1), (posy + 2) - 1] != 0)
+                {
+                    leastnumber = refboard[8 - (posx + 1), (posy + 2) - 1];
+                    possibleplaces = new int[8];
+                    possibleplaces[4] = 1;
+                }
+                else if (leastnumber == refboard[8 - (posx + 1), (posy + 2) - 1])
+                {
+                    possibleplaces[4] = 1;
+                }
             }
-            if (canJumpHere(board, posx + 2, posy + 1))
+            if (validPlaceToMove(board, posx + 2, posy + 1))
             {
-                possibleplaces[5] = 1;
+                if (leastnumber > refboard[8 - (posx + 2), (posy + 1) - 1]
+                               && refboard[8 - (posx + 2), (posy + 1) - 1] != 0)
+                {
+                    leastnumber = refboard[8 - (posx + 2), (posy + 1) - 1];
+                    possibleplaces = new int[8];
+                    possibleplaces[5] = 1;
+                }
+                else if (leastnumber == refboard[8 - (posx + 2), (posy + 1) - 1])
+                {
+                    possibleplaces[5] = 1;
+                }
             }
-            if (canJumpHere(board, posx + 2, posy - 1))
+            if (validPlaceToMove(board, posx + 2, posy - 1))
             {
-                possibleplaces[6] = 1;
+                if (leastnumber > refboard[8 - (posx + 2), (posy - 1) - 1]
+                               && refboard[8 - (posx + 2), (posy - 1) - 1] != 0)
+                {
+                    leastnumber = refboard[8 - (posx + 2), (posy - 1) - 1];
+                    possibleplaces = new int[8];
+                    possibleplaces[6] = 1;
+                }
+                else if (leastnumber == refboard[8 - (posx + 2), (posy - 1) - 1])
+                {
+                    possibleplaces[6] = 1;
+                }
             }
-            if (canJumpHere(board, posx + 1, posy - 2))
+            if (validPlaceToMove(board, posx + 1, posy - 2))
             {
-                possibleplaces[7] = 1;
+                if (leastnumber > refboard[8 - (posx + 1), (posy - 2) - 1]
+                               && refboard[8 - (posx + 1), (posy - 2) - 1] != 0)
+                {
+                    leastnumber = refboard[8 - (posx + 1), (posy - 2) - 1];
+                    possibleplaces = new int[8];
+                    possibleplaces[7] = 1;
+                }
+                else if (leastnumber == refboard[8 - (posx + 1), (posy - 2) - 1])
+                {
+                    possibleplaces[7] = 1;
+                }
             }
 
             for (int i = 0; i < 8; i++)
@@ -126,48 +209,56 @@ class main
                         posy -= 2;
                         move++;
                         board[8 - posx, posy - 1] = move;
+                        refboard[8 - posx, posy - 1] = 0;
                         break;
                     case 1:
                         posx -= 2;
                         posy -= 1;
                         move++;
                         board[8 - posx, posy - 1] = move;
+                        refboard[8 - posx, posy - 1] = 0;
                         break;
                     case 2:
                         posx -= 2;
                         posy += 1;
                         move++;
                         board[8 - posx, posy - 1] = move;
+                        refboard[8 - posx, posy - 1] = 0;
                         break;
                     case 3:
                         posx -= 1;
                         posy += 2;
                         move++;
                         board[8 - posx, posy - 1] = move;
+                        refboard[8 - posx, posy - 1] = 0;
                         break;
                     case 4:
                         posx += 1;
                         posy += 2;
                         move++;
                         board[8 - posx, posy - 1] = move;
+                        refboard[8 - posx, posy - 1] = 0;
                         break;
                     case 5:
                         posx += 2;
                         posy += 1;
                         move++;
                         board[8 - posx, posy - 1] = move;
+                        refboard[8 - posx, posy - 1] = 0;
                         break;
                     case 6:
                         posx += 2;
                         posy -= 1;
                         move++;
                         board[8 - posx, posy - 1] = move;
+                        refboard[8 - posx, posy - 1] = 0;
                         break;
                     case 7:
                         posx += 1;
                         posy -= 2;
                         move++;
                         board[8 - posx, posy - 1] = move;
+                        refboard[8 - posx, posy - 1] = 0;
                         break;
                 }
 
@@ -181,6 +272,7 @@ class main
             
         }
         Console.WriteLine("No valid places left");
+        Console.ReadLine();
     }
 
     static void horse(int posx, int posy)
@@ -211,8 +303,7 @@ class main
         {
             board = new int[8, 8];
             board[8 - posx, posy - 1] = 1;
-            int moveno = 1;
-            boardRun(board, posx, posy, moveno);
+            boardRun(board, posx, posy);
             
         }
         else
@@ -224,15 +315,20 @@ class main
     }
 
 
-    static void queenMoves(int[,] board, int posx, int posy)
+    static int queenMoves(int[,] board, int posx, int posy)
     {
         int tempx = posx;
         int tempy = posy;
+        int callCount = 0;
 
         while (posx > 0)
         {
             posx--;
-            isValid(board, posx, tempy);
+            if (validPlaceToMove(board, posx, tempy))
+            {
+                board[8 - posx, tempy - 1] = 1;
+                callCount++;
+            }
         }
 
         posx = tempx;
@@ -240,13 +336,21 @@ class main
         while (posx < 9)
         {
             posx++;
-            isValid(board, posx, tempy);
+            if (validPlaceToMove(board, posx, tempy))
+            {
+                board[8 - posx, tempy - 1] = 1;
+                callCount++;
+            }
         }
 
         while (posy > 0)
         {
             posy--;
-            isValid(board, tempx, posy);
+            if (validPlaceToMove(board, tempx, posy))
+            {
+                board[8 - tempx, posy - 1] = 1;
+                callCount++;
+            }
         }
 
         posy = tempy;
@@ -254,7 +358,11 @@ class main
         while (posy < 9)
         {
             posy++;
-            isValid(board, tempx, posy);
+            if (validPlaceToMove(board, tempx, posy))
+            {
+                board[8 - tempx, posy - 1] = 1;
+                callCount++;
+            }
         }
 
         posx = tempx;
@@ -265,7 +373,11 @@ class main
         {
             posx--;
             posy--;
-            isValid(board, posx, posy);
+            if (validPlaceToMove(board, posx, posy))
+            {
+                board[8 - posx, posy - 1] = 1;
+                callCount++;
+            }
         }
 
         posx = tempx;
@@ -276,7 +388,11 @@ class main
         {
             posx--;
             posy++;
-            isValid(board, posx, posy);
+            if (validPlaceToMove(board, posx, posy))
+            {
+                board[8 - posx, posy - 1] = 1;
+                callCount++;
+            }
         }
 
         posx = tempx;
@@ -287,7 +403,11 @@ class main
         {
             posx++;
             posy--;
-            isValid(board, posx, posy);
+            if (validPlaceToMove(board, posx, posy))
+            {
+                board[8 - posx, posy - 1] = 1;
+                callCount++;
+            }
         }
 
         posx = tempx;
@@ -298,8 +418,14 @@ class main
         {
             posx++;
             posy++;
-            isValid(board, posx, posy);
+            if (validPlaceToMove(board, posx, posy))
+            {
+                board[8 - posx, posy - 1] = 1;
+                callCount++;
+            }
         }
+
+        return callCount;
     }
 
     static void queen(int posx, int posy) 
@@ -313,7 +439,6 @@ class main
 
         printMatrix(board);
 
-        string answ;
         bool check = true;
         bool validplace = false;
 
@@ -326,6 +451,7 @@ class main
                     if (board[i, j] == 0)
                     {
                         validplace = true;
+                        break;
                     }
 
                 }
@@ -333,16 +459,9 @@ class main
 
             if (validplace)
             {
-                Console.Write("Enter y to place a new queen: ");
-                answ = Console.ReadLine();
-
-                if (answ.ToLower() == "y")
-                    nextQueen(board);
-                else
-                {
-                    Console.WriteLine("Exiting program");
-                    check = false;
-                }
+                Console.Write("Press any key to place a new queen");
+                Console.ReadKey();
+                nextQueen(board);
 
                 validplace = false;
             }
@@ -360,21 +479,54 @@ class main
 
     static void nextQueen(int[,] board)
     {
+        int[,] tempBoard;
+        int squaresOccupied, lastsquaresOccupied = 64, k = 0;
+        var tuple = new (int x, int y, int count)[8];
+        
+
+        for (int i = 0; i < 8; i++) 
+        {
+            for (int j = 0; j < 8; j++) 
+            {
+                if (board[i,j] == 0)
+                {
+                    tempBoard = (int[,])board.Clone();
+                    tempBoard[7 - i, j] = 9;
+                    squaresOccupied = 0;
+                    int x = i , y = j;
+                    squaresOccupied = queenMoves(tempBoard, ++x, ++y);
+
+                    if(squaresOccupied < lastsquaresOccupied)
+                    {
+                        lastsquaresOccupied = squaresOccupied;
+                        k = 0;
+                        tuple = new (int x, int y, int count)[8];
+                        tuple[k] = (i, j, lastsquaresOccupied);
+
+                    }
+                    else if(squaresOccupied == lastsquaresOccupied)
+                    {
+                        ++k;
+                        tuple[k] = (i, j, lastsquaresOccupied);
+                        
+                    }
+                }
+            }
+        }
 
         Random rand = new Random();
 
-        int x = rand.Next(0, 8);
-        int y = rand.Next(0, 8);
-
-        while (board[7 - x,y] != 0)
+        while (tuple[k].count <= 0)
         {
-            x = rand.Next(0, 8);
-            y = rand.Next(0, 8);
+            k = rand.Next(0, 8);
         }
 
-        board[7 - x,y] = 9;
 
-        queenMoves(board, x + 1, y + 1);
+
+        //Final placement of queen after checks
+        board[tuple[k].x, tuple[k].y] = 9;
+
+        queenMoves(board, 8 - tuple[k].x, tuple[k].y + 1);
         
         Console.Clear();
         Console.WriteLine("Board with changes ");
