@@ -9,9 +9,9 @@ using System.Xml;
 
 class main
 {
-    static void isValid(int[,] board ,int pos1, int pos2)
+    static void isValid(int[,] board, int pos1, int pos2)
     {
-        if((pos1 > 0 && pos1 < 9) && (pos2 > 0 && pos2 < 9))
+        if ((pos1 > 0 && pos1 < 9) && (pos2 > 0 && pos2 < 9))
         {
             board[8 - pos1, pos2 - 1] = 1;
         }
@@ -28,7 +28,8 @@ class main
         return false;
     }
 
-    static void printMatrix(int [,] board) {
+    static void printMatrix(int[,] board)
+    {
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -38,9 +39,9 @@ class main
                     Console.ForegroundColor = ConsoleColor.Green;
                 else if (board[i, j] % 3 == 0)
                     Console.ForegroundColor = ConsoleColor.Red;
-                else if (board[i,j] == 1)
+                else if (board[i, j] == 1)
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                
+
 
                 Console.Write("{0,2} ", board[i, j]);
 
@@ -50,7 +51,7 @@ class main
         }
     }
 
-    static void boardRun(int[,] board ,int posx, int posy, int move = 1)
+    static void boardRun(int[,] board, int posx, int posy, int move = 1)
     {
         printMatrix(board);
         int[,] refboard = { { 2, 3, 4, 4, 4, 4, 3, 2 },
@@ -74,7 +75,7 @@ class main
             leastnumber = 9;
             if (validPlaceToMove(board, posx - 1, posy - 2))
             {
-                if(refboard[8 - (posx - 1), (posy - 2) - 1] != 0)
+                if (refboard[8 - (posx - 1), (posy - 2) - 1] != 0)
                 {
                     leastnumber = refboard[8 - (posx - 1), (posy - 2) - 1];
                     possibleplaces[0] = 1;
@@ -89,7 +90,7 @@ class main
                     possibleplaces = new int[8];
                     possibleplaces[1] = 1;
                 }
-                else if(leastnumber == refboard[8 - (posx - 2), (posy - 1) - 1])
+                else if (leastnumber == refboard[8 - (posx - 2), (posy - 1) - 1])
                 {
                     possibleplaces[1] = 1;
                 }
@@ -262,14 +263,14 @@ class main
                         break;
                 }
 
-                validplace= false;
+                validplace = false;
 
                 Console.ReadKey();
                 Console.WriteLine();
 
                 printMatrix(board);
             }
-            
+
         }
         Console.WriteLine("No valid places left");
         Console.ReadLine();
@@ -293,24 +294,9 @@ class main
         isValid(board, posx + 2, posy - 1);
         isValid(board, posx + 1, posy - 2);
 
-        printMatrix(board);
-
-        string answ = "";
-        Console.Write("Enter y to start playing random horse moves: ");
-        answ = Console.ReadLine();
-
-        if (answ.ToLower() == "y")
-        {
-            board = new int[8, 8];
-            board[8 - posx, posy - 1] = 1;
-            boardRun(board, posx, posy);
-            
-        }
-        else
-        {
-            Console.WriteLine("Exiting program");
-            return;
-        }
+        board = new int[8, 8];
+        board[8 - posx, posy - 1] = 1;
+        boardRun(board, posx, posy);
 
     }
 
@@ -428,10 +414,10 @@ class main
         return callCount;
     }
 
-    static void queen(int posx, int posy) 
+    static void queen(int posx, int posy)
     {
         int[,] board = new int[8, 8];
- 
+
         // queen position marked with 9
         board[8 - posx, posy - 1] = 9;
 
@@ -471,10 +457,10 @@ class main
                 check = false;
             }
 
-            
+
         }
 
-        
+
     }
 
     static void nextQueen(int[,] board)
@@ -482,21 +468,21 @@ class main
         int[,] tempBoard;
         int squaresOccupied, lastsquaresOccupied = 64, k = 0;
         var tuple = new (int x, int y, int count)[8];
-        
 
-        for (int i = 0; i < 8; i++) 
+
+        for (int i = 0; i < 8; i++)
         {
-            for (int j = 0; j < 8; j++) 
+            for (int j = 0; j < 8; j++)
             {
-                if (board[i,j] == 0)
+                if (board[i, j] == 0)
                 {
                     tempBoard = (int[,])board.Clone();
                     tempBoard[7 - i, j] = 9;
                     squaresOccupied = 0;
-                    int x = i , y = j;
+                    int x = i, y = j;
                     squaresOccupied = queenMoves(tempBoard, ++x, ++y);
 
-                    if(squaresOccupied < lastsquaresOccupied)
+                    if (squaresOccupied < lastsquaresOccupied)
                     {
                         lastsquaresOccupied = squaresOccupied;
                         k = 0;
@@ -504,11 +490,11 @@ class main
                         tuple[k] = (i, j, lastsquaresOccupied);
 
                     }
-                    else if(squaresOccupied == lastsquaresOccupied)
+                    else if (squaresOccupied == lastsquaresOccupied)
                     {
                         ++k;
                         tuple[k] = (i, j, lastsquaresOccupied);
-                        
+
                     }
                 }
             }
@@ -527,13 +513,13 @@ class main
         board[tuple[k].x, tuple[k].y] = 9;
 
         queenMoves(board, 8 - tuple[k].x, tuple[k].y + 1);
-        
+
         Console.Clear();
         Console.WriteLine("Board with changes ");
         printMatrix(board);
 
     }
- 
+
     static int getX(string inp)
     {
         int posx = 0;
@@ -545,7 +531,8 @@ class main
             {
                 posx = Convert.ToInt32(Console.ReadLine());
 
-            }catch (Exception)
+            }
+            catch (Exception)
             {
                 //Intentionally left blank   
             }
@@ -569,7 +556,7 @@ class main
             }
             catch (Exception)
             {
-             //Intentionally left blank   
+                //Intentionally left blank   
             }
 
         } while (!(posy > 0 && posy < 9));
