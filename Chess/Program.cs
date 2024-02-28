@@ -445,7 +445,7 @@ class main
 
             if (validplace)
             {
-                Console.Write("Press any key to place a new queen");
+                Console.Write("\nPress any key to place a new queen");
                 Console.ReadKey();
                 nextQueen(board);
 
@@ -514,8 +514,7 @@ class main
 
         queenMoves(board, 8 - tuple[k].x, tuple[k].y + 1);
 
-        Console.Clear();
-        Console.WriteLine("Board with changes ");
+        Console.WriteLine("\n");
         printMatrix(board);
 
     }
