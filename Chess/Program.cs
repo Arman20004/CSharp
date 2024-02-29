@@ -37,7 +37,7 @@ class main
 
                 if (board[i, j] == 0)
                     Console.ForegroundColor = ConsoleColor.Green;
-                else if (board[i, j] % 3 == 0)
+                else if (board[i, j] == 3 || board[i,j] == 9)
                     Console.ForegroundColor = ConsoleColor.Red;
                 else if (board[i, j] == 1)
                     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -465,7 +465,7 @@ class main
 
     static void nextQueen(int[,] board)
     {
-        int[,] tempBoard;
+        int[,] tempBoard, visualBoard = (int[,])board.Clone();
         int squaresOccupied, lastsquaresOccupied = 64, k = 0;
         var tuple = new (int x, int y, int count)[8];
 
@@ -481,6 +481,7 @@ class main
                     squaresOccupied = 0;
                     int x = i, y = j;
                     squaresOccupied = queenMoves(tempBoard, ++x, ++y);
+                    visualBoard[i, j] = squaresOccupied;
 
                     if (squaresOccupied < lastsquaresOccupied)
                     {
@@ -499,6 +500,9 @@ class main
                 }
             }
         }
+
+        Console.WriteLine("\nSquares being occupied by queen if placed in that square\n");
+        printMatrix(visualBoard);
 
         Random rand = new Random();
 
